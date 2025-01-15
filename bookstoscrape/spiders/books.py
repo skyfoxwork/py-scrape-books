@@ -17,19 +17,24 @@ class BooksSpider(scrapy.Spider):
         "Five": 5
     }
 
-    def parse_book_details(self, response: Response):
+    def parse_book_details(self, response: Response) -> dict:
         yield {
             "title": response.css("div.product_main h1::text").get(),
             "price": response.css("p.price_color::text").get(),
-            "amount_in_stock": response.css("tr:contains('Availability') td::text").re_first(r"\d+"),
-            "rating": self.rating_map.get(response.css(".star-rating::attr(class)").get().split()[-1], 0),
-            "description": response.css("#product_description + p::text").get(),
+            "amount_in_stock": response.css(
+                "tr:contains('Availability') td::text"
+            ).re_first(r"\d+"),
+            "rating": self.rating_map.get(
+                response.css(".star-rating::attr(class)").get().split()[-1], 0
+            ),
+            "description": response.css(
+                "#product_description + p::text"
+            ).get(),
             "upc": response.css("tr:contains('UPC') td::text").get(),
         }
 
-
-    def parse(self, response: Response, **kwargs):
-        filename = f"books.html"
+    def parse(self, response: Response, **kwargs) -> None:
+        filename = "bookss.html"
         Path(filename).write_bytes(response.body)
         self.log(f"Saved file {filename}")
 
