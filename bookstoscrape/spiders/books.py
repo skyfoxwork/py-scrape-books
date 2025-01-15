@@ -17,7 +17,7 @@ class BooksSpider(scrapy.Spider):
         "Five": 5
     }
 
-    def parse_book_details(self, response: Response) -> dict:
+    def parse_book_details(self, response: Response) -> None:
         yield {
             "title": response.css("div.product_main h1::text").get(),
             "price": response.css("p.price_color::text").get(),
